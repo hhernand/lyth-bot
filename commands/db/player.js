@@ -126,10 +126,16 @@ module.exports = {
         if (msg.content.split(' ')[1] == 'last') {
           let take = 0;
           let currencies = logs[logs.length-1].currencies;
+          let l = logs[logs.length-1].type;
           if ((currencies.split(' ')).length == 2) {
             currtype = currencies.split(' ')[1];
             amount = Number(currencies.split(' ')[0]);
-            take -= amount;
+            if (l == 'loss') {
+              take += amount;
+            }
+            else {
+              take -= amount;
+            }
             res = helper.insertCurr(id, con, currtype, take);
           }
           else {
@@ -137,7 +143,12 @@ module.exports = {
             for (i = 0; i < currs.length; i++) {
               currtype = currs[i].split(' ')[1];
               amount = Number(currs[i].split(' ')[0]);
-              take -= amount;
+              if (l == 'loss') {
+                take += amount;
+              }
+              else {
+                take -= amount;
+              }
               res = helper.insertCurr(id, con, currtype, take);
               if (res == 1) {
                 break;
