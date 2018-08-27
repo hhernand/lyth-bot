@@ -13,7 +13,7 @@ if(process.env.JAWSDB_URL) {
 bot.on('message', (message) => {
   let msg = message.content.toLowerCase();
 
-  if (message.channel.id == '466370937562857474') {
+  if (message.channel.id == '483428849183621122') {
     if (msg.startsWith('!assign ')){
       other.roles.assign(message);
     }
