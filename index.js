@@ -19,28 +19,40 @@ bot.on('message', (message) => {
     }
   }
 
-  if (msg == '!register') {
-    db.player.register(message, con);
+  if (!message.guild || message.guild.id != '479451710704844811') {
+    if (msg == '!register') {
+      db.player.register(message, con);
+    }
+
+    if (msg == '!profile') {
+      db.player.prof(message, con);
+    }
+
+    if (msg.startsWith('!clear ')) {
+      db.player.clears(message, con);
+    }
+
+    if (msg == '!log') {
+      db.log.log(message, con);
+    }
+
+    if (msg.startsWith('!add ')) {
+      db.log.entry(message, con);
+    }
+
+    if (msg.startsWith('!lose ')) {
+      db.log.lose(message, con);
+    }
   }
 
-  if (msg == '!profile') {
-    db.player.prof(message, con);
+  //misc
+
+  if (msg.includes('press f to pay respects')) {
+    message.channel.send('F');
   }
 
-  if (msg.startsWith('!clear ')) {
-    db.player.clears(message, con);
-  }
-
-  if (msg == '!log') {
-    db.log.log(message, con);
-  }
-
-  if (msg.startsWith('!add ')) {
-    db.log.entry(message, con);
-  }
-
-  if (msg.startsWith('!lose ')) {
-    db.log.lose(message, con);
+  if (msg.includes('fluff play despacito')) {
+    message.channel.send('https://youtu.be/kJQP7kiw5Fk');
   }
 })
 
