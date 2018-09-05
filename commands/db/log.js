@@ -78,10 +78,11 @@ module.exports = {
         }
         else {
           let currs = currencies.split(', ');
+          let result = 0;
           for (j = 0; j < currs.length; j++) {
             currtype = currs[j].split(' ')[1];
-            res = helper.checkCurr(currtype);
-            if (res < 0) {
+            result = helper.checkCurr(currtype);
+            if (result < 0) {
               res = 1;
               break;
             }
@@ -91,7 +92,7 @@ module.exports = {
               break;
             }
           }
-          if (res == 0) {
+          if (result >= 0) {
             for (i = 0; i < currs.length; i++) {
               currtype = currs[i].split(' ')[1];
               amount = Number(currs[i].split(' ')[0]);
@@ -208,10 +209,11 @@ module.exports = {
         }
         else {
           let currs = currencies.split(', ');
+          let result = 0;
           for (j = 0; j < currs.length; j++) {
             currtype = currs[j].split(' ')[1];
-            res = helper.checkCurr(currtype);
-            if (res < 0) {
+            result = helper.checkCurr(currtype);
+            if (result < 0) {
               res = 1;
               break;
             }
@@ -221,7 +223,7 @@ module.exports = {
               break;
             }
           }
-          if (res == 0) {
+          if (result >= 0) {
             for (i = 0; i < currs.length; i++) {
               currtype = currs[i].split(' ')[1];
               amount = Number(currs[i].split(' ')[0]);
