@@ -134,22 +134,10 @@ module.exports = {
               helper.insertCurr(id, con, ts[i], nums[i]);
             }
           }
-          if ((currencies.split(' ')).length == 2) {
-            currtype = currencies.split(' ')[1];
-            amount = Number(currencies.split(' ')[0]);
-            if (l == 'loss') {
-              take += amount;
-            }
-            else {
-              take -= amount;
-            }
-            helper.insertCurr(id, con, currtype, take);
-          }
           else {
-            let currs = currencies.split(', ');
-            for (i = 0; i < currs.length; i++) {
-              currtype = currs[i].split(' ')[1];
-              amount = Number(currs[i].split(' ')[0]);
+            if ((currencies.split(' ')).length == 2) {
+              currtype = currencies.split(' ')[1];
+              amount = Number(currencies.split(' ')[0]);
               if (l == 'loss') {
                 take += amount;
               }
@@ -157,9 +145,24 @@ module.exports = {
                 take -= amount;
               }
               helper.insertCurr(id, con, currtype, take);
-              take = 0;
+            }
+            else {
+              let currs = currencies.split(', ');
+              for (i = 0; i < currs.length; i++) {
+                currtype = currs[i].split(' ')[1];
+                amount = Number(currs[i].split(' ')[0]);
+                if (l == 'loss') {
+                  take += amount;
+                }
+                else {
+                  take -= amount;
+                }
+                helper.insertCurr(id, con, currtype, take);
+                take = 0;
+              }
             }
           }
+
           let sql = 'DELETE FROM sublog WHERE logID = ' + logs.length + ' AND playerID = "' + id + '"';
           con.query(sql);
           msg.channel.send('Last entry has been undone.');
