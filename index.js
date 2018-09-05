@@ -19,7 +19,7 @@ bot.on('message', (message) => {
     }
   }
 
-  if (!message.guild || message.guild.id != '479451710704844811') {
+  if (!message.guild || message.guild.id != '479451710704844811' || message.channel.id == '481516829307699212') {
     if (msg == '!register') {
       db.player.register(message, con);
     }
