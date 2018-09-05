@@ -43,6 +43,10 @@ bot.on('message', (message) => {
     if (msg.startsWith('!lose ')) {
       db.log.lose(message, con);
     }
+
+    if (msg.startsWith('!convert ')) {
+      db.log.convert(message, con);
+    }
   }
 
   //misc

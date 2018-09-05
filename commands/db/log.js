@@ -63,7 +63,7 @@ module.exports = {
         currencies = (msg.content.split('[')[1]).split(']')[0];
         if ((currencies.split(' ')).length == 2) {
           currtype = currencies.split(' ')[1];
-          if (helper.checkCurr(currtype) == 0) {
+          if (helper.checkCurr(currtype) >= 0) {
             amount = Number(currencies.split(' ')[0]);
             if (isNaN(amount)) {
               res = 1;
@@ -81,7 +81,8 @@ module.exports = {
           for (j = 0; j < currs.length; j++) {
             currtype = currs[j].split(' ')[1];
             res = helper.checkCurr(currtype);
-            if (res == 1) {
+            if (res < 0) {
+              res = 1;
               break;
             }
             amount = Number(currs[j].split(' ')[0]);
@@ -119,6 +120,66 @@ module.exports = {
       });
     }
   },
+
+  convert: function(msg, con) {
+    var today = helper.date(new Date());
+
+    let conversions = [5, 6, 5, 4, 5, 5, 5, 2, 3, 2, 3, 1];
+    let num = Number(msg.content.split(' ')[1]);
+    let num2 = 0;
+    let res = 0;
+    let id = msg.author.id;
+    let type1 = '';
+    let type2 = '';
+    let statement = '';
+
+    if (!isNaN(num) && num % 5 == 0) {
+      type1 = msg.content.split(' ')[2];
+
+      if (helper.checkCurr(type1) == 0 || helper.checkCurr(type1) == 6) {
+        let t1 = helper.checkCurr(type1);
+        type2 = msg.content.split(' ')[4];
+
+        if (t1 == 0 && helper.checkCurr(type2) < 6 && helper.checkCurr(type2) != -1) {
+          let t2 = helper.checkCurr(type2);
+          num2 = conversions[t2] * (num/5);
+        }
+        else if (t1 == 6 && helper.checkCurr(type2) > 6) {
+          let t2 = helper.checkCurr(type2);
+          num2 = conversions[t2] * (num/5);
+        }
+        else {
+          res = 1;
+          statement = 'Currency you\'re converting to doesn\'t exist.'
+        }
+      }
+      else {
+        res = 1;
+        statement = 'Currency you\'re converting from doesn\'t exist.'
+      }
+    }
+    else {
+      res = 1;
+      statement = 'Number has to be divisible by 5.'
+    }
+
+    if (res == 0) {
+      helper.insertCurr(id, con, type1, -Math.abs(num));
+      helper.insertCurr(id, con, type2, num2);
+      access.logByID(id, con, function(logs) {
+        let logI = logs.length + 1;
+        let currencies = String(num) + ' ' + type1 + ' to ' + num2 + ' ' + type2;
+        let type = 'conversion';
+        let sql = 'INSERT INTO sublog VALUES(' + logI + ', "' + id + '", "' + type + '", "' + currencies + '", "-", "' + today + '")';
+        con.query(sql);
+        msg.channel.send('You converted ' + currencies + '.');
+      });
+    }
+    else {
+      msg.channel.send(statement);
+    }
+  },
+
   lose: function(msg, con) {
     if (msg.content.split('[').length == 2 && msg.content.split(']').length == 2) {
       var today = helper.date(new Date());
@@ -131,7 +192,7 @@ module.exports = {
 
         if ((currencies.split(' ')).length == 2) {
           currtype = currencies.split(' ')[1];
-          if (helper.checkCurr(currtype) == 0) {
+          if (helper.checkCurr(currtype) >= 0) {
             amount = Number(currencies.split(' ')[0]);
             if (isNaN(amount)) {
               res = 1;
@@ -150,7 +211,8 @@ module.exports = {
           for (j = 0; j < currs.length; j++) {
             currtype = currs[j].split(' ')[1];
             res = helper.checkCurr(currtype);
-            if (res == 1) {
+            if (res < 0) {
+              res = 1;
               break;
             }
             amount = Number(currs[j].split(' ')[0]);
@@ -184,6 +246,7 @@ module.exports = {
       }
     }
   },
+
   log: function(msg, con) {
     let statement = 'Bank Log - ' + msg.author.username + '\n\n';
     access.logByID(msg.author.id, con, function(logs){

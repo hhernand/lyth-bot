@@ -17,10 +17,10 @@ module.exports = {
                ];
     for (i = 0; i < types.length; i++) {
       if (type == types[i] || type == types[i]+'s') {
-        return 0;
+        return i;
       }
     }
-    return 1;
+    return (-1);
   },
   insertCurr: function(id, con, type, amount) {
     access.playerByID(id, con, function(player) {

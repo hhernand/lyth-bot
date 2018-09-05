@@ -127,6 +127,14 @@ module.exports = {
           let take = 0;
           let currencies = logs[logs.length-1].currencies;
           let l = logs[logs.length-1].type;
+          if (l == 'conversion') {
+            let num1 = Number(currencies.split(' ')[0]);
+            let t1 = currencies.split(' ')[1];
+            let num2 = Number(currencies.split(' ')[3]);
+            let t2 = currencies.split(' ')[4];
+            helper.insertCurr(id, con, t1, num1);
+            helper.insertCurr(id, con, t2, (take-num2));
+          }
           if ((currencies.split(' ')).length == 2) {
             currtype = currencies.split(' ')[1];
             amount = Number(currencies.split(' ')[0]);
@@ -136,7 +144,7 @@ module.exports = {
             else {
               take -= amount;
             }
-            res = helper.insertCurr(id, con, currtype, take);
+            helper.insertCurr(id, con, currtype, take);
           }
           else {
             let currs = currencies.split(', ');
@@ -149,7 +157,7 @@ module.exports = {
               else {
                 take -= amount;
               }
-              res = helper.insertCurr(id, con, currtype, take);
+              helper.insertCurr(id, con, currtype, take);
               if (res == 1) {
                 break;
               }
